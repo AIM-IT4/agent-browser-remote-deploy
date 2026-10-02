@@ -21,20 +21,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY runtime.tgz.b64 /tmp/runtime.tgz.b64
-
-RUN python3 - <<'PY'
-import base64, pathlib, tarfile
-src=pathlib.Path('/tmp/runtime.tgz.b64')
-tgz=pathlib.Path('/tmp/runtime.tgz')
-tgz.write_bytes(base64.b64decode(src.read_text()))
-with tarfile.open(tgz, 'r:gz') as t:
-    t.extractall('/app')
-PY
+COPY pyproject.toml README.md /app/
+COPY agent_browser_remote /app/agent_browser_remote
 
 RUN python3 -m venv /opt/venv \
-    && /opt/venv/bin/pip install --no-cache-dir /app \
-    && rm -f /tmp/runtime.tgz /tmp/runtime.tgz.b64
+    && /opt/venv/bin/pip install --no-cache-dir /app
 
 ENV PATH="/opt/venv/bin:${PATH}" \
     PORT=8001 \

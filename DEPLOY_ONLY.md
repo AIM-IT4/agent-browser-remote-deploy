@@ -1,0 +1,1 @@
+Deploy-only mirror of AIM-IT4/agent-browser-remote. Contains generic runtime/build files only. Runtime credentials such as MCP_PATH_SECRET are configured exclusively in Railway environment variables and are not committed here.
